@@ -34,7 +34,8 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     since = time.time()
     FT_losses = []
     best_model_wts = copy.deepcopy(model.state_dict())
-    best_acc = 0.0
+    # best_acc = 0.0
+    best_loss = 10.0
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
@@ -72,25 +73,28 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             epoch_acc = running_corrects.double() / dataset_sizes[phase]
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss, epoch_acc))
             # deep copy the model
-            if phase == 'val' and epoch_acc > best_acc:
-                best_acc = epoch_acc
+            # if phase == 'val' and epoch_acc > best_acc:
+            #     best_acc = epoch_acc
+            #     best_model_wts = copy.deepcopy(model.state_dict())
+            if phase == 'val' and best_loss > epoch_loss:
+                best_loss = epoch_loss
                 best_model_wts = copy.deepcopy(model.state_dict())
     
     time_elapsed = time.time() - since
     print(f'===>Training for {num_epochs} epochs completes in {time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s')
-    print('===>Best val Acc: {:4f}'.format(best_acc))
+    print('===>Best val loss: {:4f}'.format(best_loss))
     # load best model weights
     model.load_state_dict(best_model_wts)
-    return model, FT_losses, best_acc
-
+    # return model, FT_losses, best_acc
+    return model, FT_losses, best_loss
 
 
 if __name__ == "__main__":
 
 
     parser = argparse.ArgumentParser(description='Train your customized face recognition model')
-    parser.add_argument('--data_dir', type=str, default="./data/test_me", help='the path of the dataset')
-    parser.add_argument('--num_epochs', type=int, default=100, help='training epochs')
+    parser.add_argument('--data_dir', type=str, default="./data/real_images", help='the path of the dataset')
+    parser.add_argument('--num_epochs', type=int, default=10, help='training epochs')
     args = parser.parse_args()
 
 
@@ -140,14 +144,21 @@ if __name__ == "__main__":
 
 
     # train and evaluate
-    model_ft, FT_losses, best_acc = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, num_epochs=num_epochs)
+    # model_ft, FT_losses, best_acc = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, num_epochs=num_epochs)
+    model_ft, FT_losses, best_loss = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler,num_epochs=num_epochs)
 
-    
     # save labels and best model weights to checkpoint folder
+    # with open(labels_dir, 'w') as outfile:
+    #     json.dump(class_names, outfile)
+    # state = {
+    #     'model': model_ft.state_dict(),
+    #     'best_acc': best_acc,
+    # }
     with open(labels_dir, 'w') as outfile:
         json.dump(class_names, outfile)
     state = {
         'model': model_ft.state_dict(),
-        'best_acc': best_acc,
+        #     'best_acc': best_acc,
+        'best_loss': best_loss,
     }
     torch.save(state, model_path)
