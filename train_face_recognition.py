@@ -94,7 +94,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Train your customized face recognition model')
     parser.add_argument('--data_dir', type=str, default="./data/real_images", help='the path of the dataset')
-    parser.add_argument('--num_epochs', type=int, default=10, help='training epochs')
+    parser.add_argument('--num_epochs', type=int, default=100, help='training epochs')
     args = parser.parse_args()
 
 
