@@ -26,6 +26,7 @@ if __name__ == "__main__":
      model_path = "./checkpoint/model_vggface2_best.pth"
 
 
+
      # read labels
      with open(labels_dir) as f:
           labels = json.load(f)
