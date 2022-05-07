@@ -16,16 +16,14 @@ import build_custom_model
 if __name__ == "__main__":
 
      parser = argparse.ArgumentParser(description='Evaluate your customized face recognition model')
-     # parser.add_argument('--img_path', type=str, default="./data/real_images/val/arindam_jain/ari41.png", help='the path of the dataset')
-     parser.add_argument('--img_path', type=str, default="./data/real_images/val/bhavani_sankar/bhavani63.png", help='the path of the dataset')
-     # parser.add_argument('--img_path', type=str, default="./data/real_images/val/srikanth_kini/sri46.png", help='the path of the dataset')
+     # parser.add_argument('--img_path', type=str, default="./real_images/train/arindam_jain/arindam23.png", help='the path of the dataset')
+     parser.add_argument('--img_path', type=str, default="./real_images/train/bhavani_sankar/bhavani24.png", help='the path of the dataset')
+     # parser.add_argument('--img_path', type=str, default="./real_images/train/srikanth_kini/srikanth05.png", help='the path of the dataset')
 
      args = parser.parse_args()
      img_path = args.img_path
      labels_dir = "./checkpoint/labels.json"
      model_path = "./checkpoint/model_vggface2_best.pth"
-
-
 
      # read labels
      with open(labels_dir) as f:
